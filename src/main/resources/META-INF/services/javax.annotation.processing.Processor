@@ -1,0 +1,3 @@
+org.spongepowered.tools.obfuscation.MixinObfuscationProcessorInjection
+org.spongepowered.tools.obfuscation.MixinObfuscationProcessorTargets
+io.github.tox1cozz.mixinextras.MixinExtrasAnnotationProcessor

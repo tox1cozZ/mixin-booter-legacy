@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Minecraft Server" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="GradleStartServer" />
+    <module name="mixin-booter-legacy.main" />
+    <option name="VM_PARAMETERS" value="-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.coreMods.load=io.github.tox1cozz.mixinbooterlegacy.MixinBooterLegacyPlugin -Dmixin.hotSwap=true -Dmixin.checks.interfaces=true" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
+    <extension enabled="false" name="coverage" runner="idea" sample_coverage="true" />
+    <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Run" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
