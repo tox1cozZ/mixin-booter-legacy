@@ -1,5 +1,5 @@
 # mixin-booter-legacy
-Allows any mixins that work on mods to work effortlessly. With a single class and an annotation.<br>
+Allows any mixins that work on mods to work effortlessly.<br>
 Unofficial port of MixinBooter for Minecraft 1.7.10.<br>
 MixinBooter 1.12.2 - https://github.com/LoliKingdom/MixinBooter
 
