@@ -25,7 +25,7 @@ apply plugin: 'forge'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = '1.0.0'
+version = '5.0.0'
 group = 'io.github.tox1cozz.mixinbooterlegacy'
 
 sourceCompatibility = targetCompatibility = '1.8'
@@ -33,8 +33,9 @@ sourceCompatibility = targetCompatibility = '1.8'
 ext {
     mixinVersion = '0.8.2'
 
-    mixinSrg = new File(buildDir, 'mixins/mixin.mixinbooterlegacy.srg')
-    mixinRefMapName = 'mixin.mixinbooterlegacy.refmap.json'
+    mixinConfigName = 'mixinbooterlegacy'
+    mixinSrg = new File(buildDir, "mixins/mixin.${mixinConfigName}.srg")
+    mixinRefMapName = "mixin.${mixinConfigName}.refmap.json"
     mixinRefMap = new File(buildDir, "mixins/" + mixinRefMapName)
 }
 
@@ -82,7 +83,9 @@ dependencies {
 }
 
 reobf {
-    addExtraSrgFile mixinSrg
+    if (mixinSrg.exists()) {
+        addExtraSrgFile mixinSrg
+    }
 }
 
 task copySrgs(type: Copy, dependsOn: 'genSrgs') {
@@ -109,9 +112,9 @@ compileJava {
     dependsOn copySrgs
     options.compilerArgs += [
             '-Xlint:-processing',
-            "-AoutSrgFile=${project.mixinSrg.canonicalPath}",
-            "-AoutRefMapFile=${project.mixinRefMap.canonicalPath}",
-            "-AreobfSrgFile=${project.file('build/srgs/mcp-srg.srg').canonicalPath}"
+            "-AoutSrgFile=${mixinSrg.canonicalPath}",
+            "-AoutRefMapFile=${mixinRefMap.canonicalPath}",
+            "-AreobfSrgFile=${file('build/srgs/mcp-srg.srg').canonicalPath}"
     ]
     options.encoding = 'UTF-8'
 }
