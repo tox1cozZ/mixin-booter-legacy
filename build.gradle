@@ -72,7 +72,7 @@ dependencies {
     repackMixin 'org.ow2.asm:asm-commons:7.2'
     // noinspection GradlePackageUpdate
     repackMixin 'org.ow2.asm:asm-util:7.2'
-    // noinspection GradlePackageUpdate
+    // noinspection GradlePackageUpdate, VulnerableLibrariesLocal
     repackMixin 'com.google.guava:guava:21.0'
 
     sources "org.spongepowered:mixin:$mixinVersion:sources"
