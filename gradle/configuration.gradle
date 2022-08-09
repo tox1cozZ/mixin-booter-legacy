@@ -1,0 +1,73 @@
+abstract class MixinTask extends DefaultTask {
+
+    @Input
+    abstract Property<String> getMixinRefMapName()
+
+    private File mixinSrg
+    private File mixinRefMap
+
+    MixinTask() {
+        mixinRefMapName.convention("mixin.${project.name.replaceAll('[_\\-.]', '').toLowerCase()}.refmap.json")
+    }
+
+    @TaskAction
+    void action() {
+        def mixinDir = new File(project.buildDir, 'mixins')
+        if (!mixinDir.exists()) {
+            mixinDir.mkdirs()
+        }
+        def srgFile = new File(project.buildDir, 'srgs/mcp-srg.srg')
+        mixinSrg = new File(mixinDir, "${mixinRefMapName.get()}.srg")
+        mixinRefMap = new File(mixinDir, mixinRefMapName.get())
+
+        project.tasks.reobf.configure {
+            addExtraSrgFile mixinSrg
+        }
+
+        def compileJava = project.tasks.compileJava
+        compileJava.configure {
+            options.compilerArgs += [
+                    '-Xlint:-processing',
+                    "-AoutSrgFile=${mixinSrg.canonicalPath}",
+                    "-AoutRefMapFile=${mixinRefMap.canonicalPath}",
+                    "-AreobfSrgFile=${srgFile.canonicalPath}"
+            ]
+        }
+
+        project.tasks.jar.configure {
+            from mixinRefMap
+        }
+    }
+
+    @Internal
+    File getMixinSrg() {
+        return mixinSrg
+    }
+
+    @Internal
+    File getMixinRefMap() {
+        return mixinRefMap
+    }
+}
+
+repositories {
+    maven { url 'https://repo.spongepowered.org/maven' }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.tox1cozZ:mixin-booter-legacy:5.0.0'
+    annotationProcessor "org.spongepowered:mixin:0.8.2:processor"
+}
+
+tasks.register('mixin', MixinTask)
+
+task copySrgs(type: Copy, dependsOn: 'genSrgs') {
+    from plugins.getPlugin("forge").delayedFile('{SRG_DIR}')
+    include '**/*.srg'
+    into 'build/srgs'
+}
+
+compileJava {
+    dependsOn copySrgs, mixin
+}
