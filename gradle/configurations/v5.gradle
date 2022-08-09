@@ -57,13 +57,13 @@ repositories {
 
 dependencies {
     implementation 'com.github.tox1cozZ:mixin-booter-legacy:5.0.0'
-    annotationProcessor "org.spongepowered:mixin:0.8.2:processor"
+    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
 }
 
 tasks.register('mixin', MixinTask)
 
 task copySrgs(type: Copy, dependsOn: 'genSrgs') {
-    from plugins.getPlugin("forge").delayedFile('{SRG_DIR}')
+    from plugins.getPlugin('forge').delayedFile('{SRG_DIR}')
     include '**/*.srg'
     into 'build/srgs'
 }
