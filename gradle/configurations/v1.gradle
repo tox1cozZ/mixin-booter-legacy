@@ -56,7 +56,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.tox1cozZ:mixin-booter-legacy:5.0.0'
+    implementation 'com.github.tox1cozZ:mixin-booter-legacy:1.0.1'
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
 }
 

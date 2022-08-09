@@ -6,7 +6,7 @@ MixinBooter 1.12.2 - https://github.com/LoliKingdom/MixinBooter
 ## For Developers:
 
 ```
-apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v5.gradle'
+apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
 
 mixin {
     // Set custom refmap name. By default using project name
