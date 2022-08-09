@@ -73,11 +73,13 @@ compileJava {
 }
 
 processResources {
-    def refmap = tasks.mixin.mixinRefMapName.get()
-    inputs.property 'mixin_refmap', refmap
-    from(sourceSets.main.resources.srcDirs) {
-        include '*.json'
-        expand 'mixin_refmap': refmap
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    afterEvaluate {
+        def refmap = tasks.mixin.mixinRefMapName.get()
+        inputs.property 'mixin_refmap', refmap
+        from(sourceSets.main.resources.srcDirs) {
+            include '*.json'
+            expand 'mixin_refmap': refmap
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
     }
 }
