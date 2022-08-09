@@ -71,3 +71,13 @@ task copySrgs(type: Copy, dependsOn: 'genSrgs') {
 compileJava {
     dependsOn copySrgs, mixin
 }
+
+processResources {
+    def refmap = tasks.mixin.mixinRefMapName.get()
+    inputs.property 'mixin_refmap', refmap
+    from(sourceSets.main.resources.srcDirs) {
+        include '*.json'
+        expand 'mixin_refmap': refmap
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+}
