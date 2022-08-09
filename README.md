@@ -6,53 +6,10 @@ MixinBooter 1.12.2 - https://github.com/LoliKingdom/MixinBooter
 ## For Developers:
 
 ```
-ext {
-    mixinVersion = '0.8.2'
-    mixinConfigName = project.name // Set custom config name
-    mixinSrg = new File(buildDir, "mixins/mixin.${mixinConfigName}.srg")
-    mixinRefMapName = "mixin.${mixinConfigName}.refmap.json"
-    mixinRefMap = new File(buildDir, "mixins/" + mixinRefMapName)
-}
+apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v5.gradle'
 
-repositories {
-    maven {
-        name 'Spongepowered'
-        url 'https://repo.spongepowered.org/maven'
-    }
-    maven {
-        name 'Jitpack'
-        url 'https://jitpack.io'
-    }
-}
-
-dependencies {
-    implementation 'com.github.tox1cozZ:mixin-booter-legacy:5.0.0'
-    annotationProcessor "org.spongepowered:mixin:$mixinVersion:processor"
-}
-
-reobf {
-    if (mixinSrg.exists()) {
-        addExtraSrgFile mixinSrg
-    }
-}
-
-task copySrgs(type: Copy, dependsOn: 'genSrgs') {
-    from plugins.getPlugin("forge").delayedFile('{SRG_DIR}')
-    include '**/*.srg'
-    into 'build/srgs'
-}
-
-compileJava {
-    dependsOn copySrgs
-    options.compilerArgs += [
-            '-Xlint:-processing',
-            "-AoutSrgFile=${mixinSrg.canonicalPath}",
-            "-AoutRefMapFile=${mixinRefMap.canonicalPath}",
-            "-AreobfSrgFile=${file('build/srgs/mcp-srg.srg').canonicalPath}"
-    ]
-}
-
-jar {
-    from mixinRefMap
+mixin {
+    // Set custom refmap name. By default using project name
+    // mixinRefMapName = 'mixin.custom.refmap.json'
 }
 ```
