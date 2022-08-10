@@ -65,12 +65,11 @@ tasks.register('mixin', MixinTask)
 task copySrgs(type: Copy, dependsOn: 'genSrgs') {
     from plugins.getPlugin('forge').delayedFile('{SRG_DIR}')
     include '**/*.srg'
-    into 'build/srgs'
+    into layout.buildDirectory.file('srgs')
 }
 
-compileJava {
-    dependsOn copySrgs, mixin
-}
+compileJava.dependsOn(copySrgs, mixin)
+tasks.findByPath(":prepareKotlinBuildScriptModel")?.dependsOn(copySrgs, mixin)
 
 processResources {
     afterEvaluate {
