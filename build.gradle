@@ -137,6 +137,21 @@ jar {
     from mixinRefMap
 }
 
+task annotationProcessorJar(type: Jar, dependsOn: classes) {
+    classifier = 'processor'
+    from(sourceSets.main.output) {
+        include 'io/github/tox1cozz/mixinextras/**'
+
+        def processor = 'META-INF/services/javax.annotation.processing.Processor'
+        include processor
+        filesMatching(processor) { file ->
+            file.filter {
+                it == 'io.github.tox1cozz.mixinextras.MixinExtrasAnnotationProcessor' ? it : null
+            }
+        }
+    }
+}
+
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allJava
@@ -156,6 +171,7 @@ task javadocJar(type: Jar) {
 }
 
 artifacts {
+    archives annotationProcessorJar
     archives sourcesJar
     archives javadocJar
 }
@@ -167,11 +183,14 @@ publishing {
             artifact(jar) {
                 builtBy jar
             }
+            artifact(javadocJar) {
+                builtBy javadocJar
+            }
             artifact(sourcesJar) {
                 builtBy sourcesJar
             }
-            artifact(javadocJar) {
-                builtBy javadocJar
+            artifact(annotationProcessorJar) {
+                builtBy annotationProcessorJar
             }
         }
     }
