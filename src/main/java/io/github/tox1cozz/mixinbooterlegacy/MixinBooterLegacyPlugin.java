@@ -95,7 +95,7 @@ public final class MixinBooterLegacyPlugin implements IFMLLoadingPlugin {
             ModMetadata meta = getMetadata();
             meta.modId = "mixinbooterlegacy";
             meta.name = "MixinBooterLegacy";
-            meta.version = "1.0.1";
+            meta.version = "1.0.2";
             meta.description = "A Mixin library and loader.";
             meta.logoFile = "/icon.png";
             meta.authorList.addAll(Lists.newArrayList("Rongmario", "tox1cozZ"));

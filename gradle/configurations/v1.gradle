@@ -56,9 +56,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.tox1cozZ:mixin-booter-legacy:1.0.1'
+    implementation 'com.github.tox1cozZ:mixin-booter-legacy:1.0.2'
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
-    annotationProcessor 'com.github.tox1cozZ:mixin-booter-legacy:1.0.1:processor'
+    annotationProcessor 'com.github.tox1cozZ:mixin-booter-legacy:1.0.2:processor'
 }
 
 tasks.register('mixin', MixinTask)
