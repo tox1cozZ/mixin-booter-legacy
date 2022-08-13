@@ -1,5 +1,7 @@
 package io.github.tox1cozz.mixinextras.injector;
 
+import io.github.tox1cozz.mixinextras.utils.CompatibilityHelper;
+import io.github.tox1cozz.mixinextras.utils.InjectorUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.libraries.org.objectweb.asm.Opcodes;
 import org.spongepowered.libraries.org.objectweb.asm.Type;
@@ -8,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.code.Injector;
 import org.spongepowered.asm.mixin.injection.struct.InjectionInfo;
 import org.spongepowered.asm.mixin.injection.struct.InjectionNodes.InjectionNode;
 import org.spongepowered.asm.mixin.injection.struct.Target;
-import org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException;
 
 public class ModifyReceiverInjector extends Injector {
 
@@ -33,7 +34,7 @@ public class ModifyReceiverInjector extends Injector {
             case Opcodes.PUTFIELD:
                 return;
             default:
-                throw new InvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s", annotationType, target, this));
+                throw CompatibilityHelper.makeInvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s", annotationType, target, this));
         }
     }
 
@@ -42,7 +43,7 @@ public class ModifyReceiverInjector extends Injector {
         Type[] originalArgTypes = getEffectiveArgTypes(node.getOriginalTarget());
         Type[] currentArgTypes = getEffectiveArgTypes(currentTarget);
         InsnList insns = new InsnList();
-        boolean isVirtualRedirect = node.hasDecoration("redirector") && currentTarget.getOpcode() != Opcodes.INVOKESTATIC;
+        boolean isVirtualRedirect = InjectorUtils.isVirtualRedirect(node);
         injectReceiverModifier(target, originalArgTypes, currentArgTypes, isVirtualRedirect, insns);
         target.insertBefore(node, insns);
     }

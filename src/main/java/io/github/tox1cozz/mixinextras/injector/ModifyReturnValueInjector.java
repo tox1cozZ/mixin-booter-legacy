@@ -1,5 +1,6 @@
 package io.github.tox1cozz.mixinextras.injector;
 
+import io.github.tox1cozz.mixinextras.utils.CompatibilityHelper;
 import org.spongepowered.libraries.org.objectweb.asm.Opcodes;
 import org.spongepowered.libraries.org.objectweb.asm.tree.InsnList;
 import org.spongepowered.libraries.org.objectweb.asm.tree.InsnNode;
@@ -8,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.code.Injector;
 import org.spongepowered.asm.mixin.injection.struct.InjectionInfo;
 import org.spongepowered.asm.mixin.injection.struct.InjectionNodes.InjectionNode;
 import org.spongepowered.asm.mixin.injection.struct.Target;
-import org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException;
 
 public class ModifyReturnValueInjector extends Injector {
 
@@ -20,7 +20,7 @@ public class ModifyReturnValueInjector extends Injector {
     protected void inject(Target target, InjectionNode node) {
         int opcode = node.getCurrentTarget().getOpcode();
         if (opcode < Opcodes.IRETURN || opcode >= Opcodes.RETURN) {
-            throw new InvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s", annotationType, target, this));
+            throw CompatibilityHelper.makeInvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s", annotationType, target, this));
         }
         checkTargetModifiers(target, false);
         injectReturnValueModifier(target, node);

@@ -1,5 +1,7 @@
 package io.github.tox1cozz.mixinextras.injector;
 
+import io.github.tox1cozz.mixinextras.utils.CompatibilityHelper;
+import io.github.tox1cozz.mixinextras.utils.InjectorUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.libraries.org.objectweb.asm.Opcodes;
 import org.spongepowered.libraries.org.objectweb.asm.Type;
@@ -8,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.code.Injector;
 import org.spongepowered.asm.mixin.injection.struct.InjectionInfo;
 import org.spongepowered.asm.mixin.injection.struct.InjectionNodes.InjectionNode;
 import org.spongepowered.asm.mixin.injection.struct.Target;
-import org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException;
 
 public class WrapWithConditionInjector extends Injector {
 
@@ -31,16 +32,11 @@ public class WrapWithConditionInjector extends Injector {
 
         Type returnType = getReturnType(node.getCurrentTarget());
         if (returnType == null) {
-            throw new InvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s",
-                    annotationType, target, this));
+            throw CompatibilityHelper.makeInvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s", annotationType, target, this));
         }
 
         if (returnType != Type.VOID_TYPE) {
-            throw new InvalidInjectionException(info,
-                    String.format(
-                            "%s annotation is targeting an instruction with a non-void return type in %s in %s",
-                            annotationType, target, this
-                    ));
+            throw CompatibilityHelper.makeInvalidInjectionException(info, String.format("%s annotation is targeting an instruction with a non-void return type in %s in %s", annotationType, target, this));
         }
     }
 
@@ -51,7 +47,7 @@ public class WrapWithConditionInjector extends Injector {
         Type[] currentArgTypes = getEffectiveArgTypes(currentTarget);
         InsnList before = new InsnList();
         InsnList after = new InsnList();
-        boolean isVirtualRedirect = node.hasDecoration("redirector") && currentTarget.getOpcode() != Opcodes.INVOKESTATIC;
+        boolean isVirtualRedirect = InjectorUtils.isVirtualRedirect(node);
         invokeHandler(target, returnType, originalArgTypes, currentArgTypes, isVirtualRedirect, before, after);
         target.wrapNode(currentTarget, currentTarget, before, after);
     }

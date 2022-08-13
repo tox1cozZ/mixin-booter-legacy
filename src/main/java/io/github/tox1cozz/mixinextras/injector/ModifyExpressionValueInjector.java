@@ -1,5 +1,6 @@
 package io.github.tox1cozz.mixinextras.injector;
 
+import io.github.tox1cozz.mixinextras.utils.CompatibilityHelper;
 import org.spongepowered.libraries.org.objectweb.asm.Opcodes;
 import org.spongepowered.libraries.org.objectweb.asm.Type;
 import org.spongepowered.libraries.org.objectweb.asm.tree.*;
@@ -7,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.code.Injector;
 import org.spongepowered.asm.mixin.injection.struct.InjectionInfo;
 import org.spongepowered.asm.mixin.injection.struct.InjectionNodes.InjectionNode;
 import org.spongepowered.asm.mixin.injection.struct.Target;
-import org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException;
 import org.spongepowered.asm.util.Bytecode;
 
 public class ModifyExpressionValueInjector extends Injector {
@@ -33,11 +33,11 @@ public class ModifyExpressionValueInjector extends Injector {
     private void checkTargetReturnsAValue(Target target, InjectionNode node) {
         Type returnType = getReturnType(node.getCurrentTarget());
         if (returnType == Type.VOID_TYPE) {
-            throw new InvalidInjectionException(info, String.format("%s annotation is targeting an instruction with a return type of 'void' in %s in %s", annotationType, target, this));
+            throw CompatibilityHelper.makeInvalidInjectionException(info, String.format("%s annotation is targeting an instruction with a return type of 'void' in %s in %s", annotationType, target, this));
         }
 
         if (returnType == null) {
-            throw new InvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s", annotationType, target, this));
+            throw CompatibilityHelper.makeInvalidInjectionException(info, String.format("%s annotation is targeting an invalid insn in %s in %s", annotationType, target, this));
         }
     }
 

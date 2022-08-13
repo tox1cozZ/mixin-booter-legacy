@@ -3,7 +3,7 @@ package org.spongepowered.asm.bridge;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.objectweb.asm.commons.Remapper;
+import org.spongepowered.libraries.org.objectweb.asm.commons.Remapper;
 import org.spongepowered.asm.mixin.extensibility.IRemapper;
 
 public final class RemapperAdapterFML extends RemapperAdapter {

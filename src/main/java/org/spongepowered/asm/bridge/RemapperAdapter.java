@@ -2,7 +2,7 @@ package org.spongepowered.asm.bridge;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.objectweb.asm.commons.Remapper;
+import org.spongepowered.libraries.org.objectweb.asm.commons.Remapper;
 import org.spongepowered.asm.mixin.extensibility.IRemapper;
 import org.spongepowered.asm.util.ObfuscationUtil;
 

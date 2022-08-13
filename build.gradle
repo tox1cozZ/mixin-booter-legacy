@@ -25,7 +25,7 @@ apply plugin: 'forge'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = '1.0.3'
+version = '1.1.0'
 group = 'io.github.tox1cozz.mixinbooterlegacy'
 
 sourceCompatibility = targetCompatibility = '1.8'
@@ -46,6 +46,7 @@ minecraft {
 
 configurations {
     repackMixin
+    repackMixinProcessor
     sources {
         transitive = false
     }
@@ -75,11 +76,15 @@ dependencies {
     // noinspection GradlePackageUpdate, VulnerableLibrariesLocal
     repackMixin 'com.google.guava:guava:21.0'
 
+    repackMixinProcessor "org.spongepowered:mixin:$mixinVersion:processor"
+
     sources "org.spongepowered:mixin:$mixinVersion:sources"
     javadoc "org.spongepowered:mixin:$mixinVersion:javadoc"
 
-    implementation name: "mixin-$mixinVersion-repack"
-    annotationProcessor "org.spongepowered:mixin:$mixinVersion:processor"
+    if (findProperty('generateRepacks') == null) {
+        implementation name: "mixin-$mixinVersion-repack"
+        annotationProcessor name: "mixin-$mixinVersion-processor-repack"
+    }
 }
 
 reobf {
@@ -100,11 +105,31 @@ task repackMixinJar(type: ShadowJar) {
     archiveFileName.set("mixin-$mixinVersion-repack.jar")
     configurations = [project.configurations.repackMixin]
 
-    exclude 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
+    mergeServiceFiles()
+
+    exclude 'META-INF/MANIFEST.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
     exclude '**/module-info.class'
 
     relocate 'org.objectweb.asm', 'org.spongepowered.libraries.org.objectweb.asm'
     relocate 'com.google.common', 'org.spongepowered.libraries.com.google.common'
+    relocate 'com.google.thirdparty.publicsuffix', 'org.spongepowered.libraries.com.google.thirdparty.publicsuffix'
+}
+
+// Execute for generate mixin annotation processor repack jar
+task repackMixinProcessorJar(type: ShadowJar) {
+    destinationDirectory.set(layout.projectDirectory.dir('dependencies'))
+    archiveFileName.set("mixin-$mixinVersion-processor-repack.jar")
+    configurations = [project.configurations.repackMixinProcessor]
+
+    mergeServiceFiles()
+
+    exclude 'META-INF/MANIFEST.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
+    exclude '**/module-info.class'
+
+    relocate 'org.objectweb.asm', 'org.spongepowered.libraries.org.objectweb.asm'
+    relocate 'com.google.common', 'org.spongepowered.libraries.com.google.common'
+    relocate 'com.google.gson', 'org.spongepowered.libraries.com.google.gson'
+    relocate 'org.apache.logging.log4j', 'org.spongepowered.libraries.org.apache.logging.log4j'
     relocate 'com.google.thirdparty.publicsuffix', 'org.spongepowered.libraries.com.google.thirdparty.publicsuffix'
 }
 
@@ -141,14 +166,11 @@ task annotationProcessorJar(type: Jar, dependsOn: classes) {
     classifier = 'processor'
     from(sourceSets.main.output) {
         include 'io/github/tox1cozz/mixinextras/**'
-
-        def processor = 'META-INF/services/javax.annotation.processing.Processor'
-        include processor
-        filesMatching(processor) { file ->
-            file.filter {
-                it == 'io.github.tox1cozz.mixinextras.MixinExtrasAnnotationProcessor' ? it : null
-            }
-        }
+        include 'META-INF/services/javax.annotation.processing.Processor'
+    }
+    from(zipTree(layout.projectDirectory.file("dependencies/mixin-$mixinVersion-processor-repack.jar"))) {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/services/*.Processor'
     }
 }
 
