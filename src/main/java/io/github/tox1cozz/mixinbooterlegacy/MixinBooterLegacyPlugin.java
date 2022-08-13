@@ -9,15 +9,11 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
+import io.github.tox1cozz.mixinextras.MixinExtrasBootstrap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
-import org.spongepowered.asm.mixin.injection.struct.InjectionInfo;
-import io.github.tox1cozz.mixinextras.injector.ModifyExpressionValueInjectionInfo;
-import io.github.tox1cozz.mixinextras.injector.ModifyReceiverInjectionInfo;
-import io.github.tox1cozz.mixinextras.injector.ModifyReturnValueInjectionInfo;
-import io.github.tox1cozz.mixinextras.injector.WrapWithConditionInjectionInfo;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -34,10 +30,7 @@ public final class MixinBooterLegacyPlugin implements IFMLLoadingPlugin {
         LOGGER.info("MixinBootstrap Initializing...");
         MixinBootstrap.init();
         // Initialize MixinExtras
-        InjectionInfo.register(ModifyExpressionValueInjectionInfo.class);
-        InjectionInfo.register(ModifyReceiverInjectionInfo.class);
-        InjectionInfo.register(ModifyReturnValueInjectionInfo.class);
-        InjectionInfo.register(WrapWithConditionInjectionInfo.class);
+        MixinExtrasBootstrap.init();
         Mixins.addConfiguration("mixin.mixinbooterlegacy.json");
     }
 

@@ -22,6 +22,7 @@ public class MixinExtrasAnnotationProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         MessageRouter.setMessager(processingEnv.getMessager());
+        MixinExtrasBootstrap.init();
     }
 
     @Override
