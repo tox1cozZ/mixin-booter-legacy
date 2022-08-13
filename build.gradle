@@ -137,7 +137,7 @@ jar {
     from mixinRefMap
 }
 
-task annotationProcessorJar(type: Jar, dependsOn: classes) {
+task annotationProcessorJar(type: Jar) {
     classifier = 'processor'
     from(sourceSets.main.output) {
         include 'io/github/tox1cozz/mixinextras/**'
@@ -170,6 +170,8 @@ task javadocJar(type: Jar) {
     }
 }
 
+jar.finalizedBy(annotationProcessorJar)
+
 artifacts {
     archives annotationProcessorJar
     archives sourcesJar
@@ -183,14 +185,14 @@ publishing {
             artifact(jar) {
                 builtBy jar
             }
+            artifact(annotationProcessorJar) {
+                builtBy annotationProcessorJar
+            }
             artifact(javadocJar) {
                 builtBy javadocJar
             }
             artifact(sourcesJar) {
                 builtBy sourcesJar
-            }
-            artifact(annotationProcessorJar) {
-                builtBy annotationProcessorJar
             }
         }
     }
