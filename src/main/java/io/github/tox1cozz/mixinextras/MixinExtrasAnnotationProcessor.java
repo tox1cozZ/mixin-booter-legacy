@@ -10,10 +10,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-/*
-    TODO: Refmap not working for new annotations
-    Use srg names or create dummy @Inject
- */
 @SupportedAnnotationTypes({})
 public class MixinExtrasAnnotationProcessor extends AbstractProcessor {
 
