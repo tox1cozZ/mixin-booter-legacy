@@ -3,6 +3,9 @@ Allows any mixins that work on mods to work effortlessly.<br>
 Unofficial port of MixinBooter for Minecraft 1.7.10.<br>
 MixinBooter 1.12.2 - https://github.com/LoliKingdom/MixinBooter
 
+## For Users:
+Download mod from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/mixinbooterlegacy) and put jar to your mods directory.<br>
+
 ## For Developers:
 
 ```
