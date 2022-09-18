@@ -18,6 +18,9 @@ abstract class MixinTask extends DefaultTask {
         }
         def srgFile = new File(project.buildDir, 'srgs/mcp-srg.srg')
         mixinSrg = new File(mixinDir, "${mixinRefMapName.get()}.srg")
+        if (!mixinSrg.exists()) {
+            mixinSrg.createNewFile()
+        }
         mixinRefMap = new File(mixinDir, mixinRefMapName.get())
 
         project.tasks.reobf.configure {
