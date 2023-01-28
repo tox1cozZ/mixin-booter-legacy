@@ -2,8 +2,10 @@ package io.github.tox1cozz.mixinbooterlegacy.loader.mixin;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.discovery.ASMDataTable;
+import io.github.tox1cozz.mixinbooterlegacy.LateMixin;
 import io.github.tox1cozz.mixinbooterlegacy.MixinBooterLegacyPlugin;
 import net.minecraft.launchwrapper.Launch;
+import org.spongepowered.asm.launch.MixinInitialisationError;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
@@ -36,11 +38,15 @@ public class LoadControllerMixin {
 
         MixinBooterLegacyPlugin.LOGGER.info("Instantiating all ILateMixinLoader implemented classes...");
 
-        for (ASMDataTable.ASMData asmData : asmDataTable.getAll(ILateMixinLoader.class.getName().replace('.', '/'))) {
+        for (ASMDataTable.ASMData asmData : asmDataTable.getAll(LateMixin.class.getName().replace('.', '/'))) {
             modClassLoader.addFile(asmData.getCandidate().getModContainer()); // Add to path before `newInstance`
             Class<?> clazz = Class.forName(asmData.getClassName().replace('/', '.'));
             MixinBooterLegacyPlugin.LOGGER.info("Instantiating {} for its mixins.", clazz);
-            ILateMixinLoader loader = (ILateMixinLoader)clazz.newInstance();
+
+            if (!clazz.isAssignableFrom(ILateMixinLoader.class))
+                throw new MixinInitialisationError(String.format("The class %s has the LateMixin annotation, but does not implement the ILateMixinLoader interface.", clazz.getName()));
+
+            ILateMixinLoader loader = (ILateMixinLoader) clazz.newInstance();
             for (String mixinConfig : loader.getMixinConfigs()) {
                 if (loader.shouldMixinConfigQueue(mixinConfig)) {
                     MixinBooterLegacyPlugin.LOGGER.info("Adding {} mixin configuration.", mixinConfig);
